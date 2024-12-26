@@ -78,14 +78,8 @@ public class NoteController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Note> deleteNoteById(@PathVariable String id) {
-        Optional<Note> optionalNote = noteService.getById(id);
+        Note note = noteService.getById(id).orElseThrow(() -> new RuntimeException("Note not found"));;
 
-        if (optionalNote.isEmpty()) {
-            System.out.println("hey there");
-            return ResponseEntity.badRequest().build();
-        }
-
-        Note note = optionalNote.get();
         note.setDeleted(true);
         noteService.save(note);
 

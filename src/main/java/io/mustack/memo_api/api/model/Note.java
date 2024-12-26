@@ -1,22 +1,27 @@
 package io.mustack.memo_api.api.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "notes")
 public class Note {
 
-    private int id;
+    @Id
+    private String id;
     private String title;
     private String content;
 
-    public Note(int id, String title, String content) {
+    public Note(String id, String title, String content) {
         this.id = id;
         this.title = title;
         this.content = content;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

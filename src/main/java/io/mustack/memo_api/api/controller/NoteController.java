@@ -58,6 +58,8 @@ public class NoteController {
                     System.out.println(value);
                     note.setDeleted((Boolean) value);
                     break;
+                case "id":
+                    throw new IllegalArgumentException("Cannot update id");
                 default:
                     throw new IllegalArgumentException("Invalid object field " + key);
             }

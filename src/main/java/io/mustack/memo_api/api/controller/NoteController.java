@@ -61,7 +61,6 @@ public class NoteController {
                     note.setContent((String) value);
                     break;
                 case "deleted":
-                    System.out.println(value);
                     note.setDeleted((Boolean) value);
                     break;
                 case "id":

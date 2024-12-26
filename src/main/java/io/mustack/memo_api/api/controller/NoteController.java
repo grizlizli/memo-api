@@ -1,9 +1,11 @@
 package io.mustack.memo_api.api.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,20 +25,6 @@ public class NoteController {
     @Autowired
     private NoteService noteService;
 
-    // @Autowired
-    // public NoteController(NoteService noteService) {
-    //     this.noteService = noteService;
-    // }
-
-    // @GetMapping("/notes")
-    // public Note getNote(@RequestParam Integer id) {
-    //     Optional note = noteService.getNote(id);
-    //     if (note.isPresent()) {
-    //         return (Note) note.get();
-    //     }
-
-    //     return null;
-    // }
 
     @GetMapping
     public List<Note> getNotes() {
@@ -48,17 +36,42 @@ public class NoteController {
         return noteService.getById(id).orElse(null);
     }
 
-    // @PatchMapping("/{id}")
-    // public Note updateNoteById(@PathVariable String id, @RequestBody Note note) {
-    //     System.out.println(id);
-    //     return noteService.updateById(id, note).orElse(null);
-    // }
+    @PatchMapping("/{id}")
+    public ResponseEntity<Note> updateNoteById(@PathVariable String id, @RequestBody Map<String, Object> payload) {
+        Optional<Note> optionalNote = noteService.getById(id);
+
+        if (optionalNote.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Note note = optionalNote.get();
+
+        payload.forEach((key, value) -> {
+            switch (key) {
+                case "title":
+                    note.setTitle((String) value);
+                    break;
+                case "content":
+                    note.setContent((String) value);
+                    break;
+                case "deleted":
+                    System.out.println(value);
+                    note.setDeleted((Boolean) value);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid object field " + key);
+            }
+        });
+
+        Note updatedNote = noteService.save(note);
+
+        return ResponseEntity.ok(updatedNote);
+    }
 
     @PostMapping
     public Note createUser(@RequestBody Note note) {
-        System.out.println("grizli");
-        System.out.println(note.getTitle());
-        return noteService.create(note);
+        note.setDeleted(false);
+        return noteService.save(note);
     }
     
 }

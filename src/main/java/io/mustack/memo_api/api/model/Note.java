@@ -10,11 +10,13 @@ public class Note {
     private String id;
     private String title;
     private String content;
+    private Boolean deleted = false;
 
-    public Note(String id, String title, String content) {
+    public Note(String id, String title, String content, Boolean deleted) {
         this.id = id;
         this.title = title;
         this.content = content;
+        this.deleted = deleted;
     }
 
     public String getId() {
@@ -39,5 +41,13 @@ public class Note {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 }

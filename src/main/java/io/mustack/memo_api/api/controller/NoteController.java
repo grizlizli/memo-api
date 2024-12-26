@@ -4,15 +4,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.mustack.memo_api.api.model.Note;
@@ -25,6 +26,11 @@ public class NoteController {
     @Autowired
     private NoteService noteService;
 
+    @PostMapping
+    public Note createNote(@RequestBody Note note) {
+        note.setDeleted(false);
+        return noteService.save(note);
+    }
 
     @GetMapping
     public List<Note> getNotes() {
@@ -70,10 +76,20 @@ public class NoteController {
         return ResponseEntity.ok(updatedNote);
     }
 
-    @PostMapping
-    public Note createUser(@RequestBody Note note) {
-        note.setDeleted(false);
-        return noteService.save(note);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Note> deleteNoteById(@PathVariable String id) {
+        Optional<Note> optionalNote = noteService.getById(id);
+
+        if (optionalNote.isEmpty()) {
+            System.out.println("hey there");
+            return ResponseEntity.badRequest().build();
+        }
+
+        Note note = optionalNote.get();
+        note.setDeleted(true);
+        noteService.save(note);
+
+        return ResponseEntity.ok(note);
     }
     
 }

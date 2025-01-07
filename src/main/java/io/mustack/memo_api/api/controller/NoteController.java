@@ -43,7 +43,6 @@ public class NoteController {
     }
 
     @PatchMapping("/{id}")
-    @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<Note> updateNoteById(@PathVariable String id, @RequestBody Map<String, Object> payload) {
         Optional<Note> optionalNote = noteService.getById(id);
 
@@ -77,7 +76,6 @@ public class NoteController {
     }
 
     @DeleteMapping("/{id}")
-    @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<Note> deleteNoteById(@PathVariable String id) {
         Note note = noteService.getById(id).orElseThrow(() -> new RuntimeException("Note not found"));;
 

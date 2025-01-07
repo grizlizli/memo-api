@@ -54,9 +54,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     new WebAuthenticationDetailsSource().buildDetails(request)
                 );
 
-                System.out.println("I AM HERE "  + email + " " + token);
-                System.out.println(authToken.toString());
-
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }

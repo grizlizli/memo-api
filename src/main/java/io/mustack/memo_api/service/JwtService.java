@@ -5,6 +5,7 @@ import java.util.function.Function;
 
 import javax.crypto.SecretKey;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
@@ -34,10 +35,9 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public boolean isValid(String token) {
+    public boolean isValid(String token, UserDetails userDetails) {
         String email = extractEmail(token);
-        // mock
-        return (email.equals("admin@localhost")) && !isTokenExpired(token);
+        return (email.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> resolver) {
